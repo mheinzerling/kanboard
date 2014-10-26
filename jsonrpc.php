@@ -227,7 +227,7 @@ $server->register('removeTask', function($task_id) use ($task) {
 });
 
 $server->register('moveTaskPosition', function($project_id, $task_id, $column_id, $position) use ($task) {
-    return $task->movePosition($project_id, $task_id, $column_id, $position);
+    return $task->movePosition($project_id, $task_id, $column_id, -1, $position);
 });
 
 

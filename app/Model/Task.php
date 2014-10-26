@@ -262,10 +262,11 @@ class Task extends Base
      * @param  integer    $project_id        Project id
      * @param  integer    $task_id           Task id
      * @param  integer    $column_id         Column id
+	 * @param  integer    $release_id         Release id
      * @param  integer    $position          Position (must be >= 1)
      * @return boolean
      */
-    public function movePosition($project_id, $task_id, $column_id, $position)
+    public function movePosition($project_id, $task_id, $column_id, $release_id, $position)
     {
         // The position can't be lower than 1
         if ($position < 1) {
@@ -294,9 +295,9 @@ class Task extends Base
 
         // We put our task to the new position
         array_splice($columns[$column_id], $position - 1, 0, $task_id); // print_r($columns);
-
+		// TODO validate release
         // We save the new positions for all tasks
-        return $this->savePositions($task_id, $columns);
+        return $this->savePositions($task_id, $columns, $release_id);
     }
 
     /**
@@ -305,11 +306,14 @@ class Task extends Base
      * @access private
      * @param  integer     $moved_task_id    Id of the moved task
      * @param  array       $columns          Sorted tasks
+	 * @param  integer     $release_id    new release id
      * @return boolean
      */
-    private function savePositions($moved_task_id, array $columns)
+    private function savePositions($moved_task_id, array $columns, $release_id=-1)
     {
         $this->db->startTransaction();
+
+		if ($release_id >= 0) $this->update(array('id' => $moved_task_id, 'release_id' => $release_id));
 
         foreach ($columns as $column_id => $column) {
 

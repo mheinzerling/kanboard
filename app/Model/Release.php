@@ -77,6 +77,35 @@ class Release extends Base
 	}
 
 	/**
+	 * Return the list of all releases
+	 *
+	 * @access public
+	 * @param  integer   $project_id    Project id
+	 * @param  bool      $prepend_none  If true, prepend to the list the value 'None'
+	 * @param  bool      $prepend_all   If true, prepend to the list the value 'All'
+	 * @return array
+	 */
+	public function getList($project_id, $prepend_none = true, $prepend_all = false)
+	{
+		$listing = $this->db->table(self::TABLE)
+			->eq('project_id', $project_id)
+			->asc('name')
+			->listing('id', 'name');
+
+		$prepend = array();
+
+		if ($prepend_all) {
+			$prepend[-1] = t('All releases');
+		}
+
+		if ($prepend_none) {
+			$prepend[0] = t('No release');
+		}
+
+		return $prepend + $listing;
+	}
+
+	/**
 	 * Validate release creation
 	 *
 	 * @access public

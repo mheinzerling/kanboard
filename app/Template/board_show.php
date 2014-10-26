@@ -1,10 +1,12 @@
 <table id="board" data-project-id="<?= $current_project_id ?>" data-time="<?= time() ?>" data-check-interval="<?= $board_private_refresh_interval ?>" data-csrf-token=<?= \Core\Security::getCSRFToken() ?>>
+<?php foreach ($board as $release): ?>
+<tr><th style="background-color: white; margin:0;padding: 0;border:0" colspan="<?=count($release['columns'])?>"><h1><?=$release['name']?></h1></th></tr>
 <tr>
-    <?php $column_with = round(100 / count($board), 2); ?>
-    <?php foreach ($board as $column): ?>
+    <?php $column_with = round(100 / count($release['columns']), 2); ?>
+    <?php foreach ($release['columns'] as $column): ?>
     <th width="<?= $column_with ?>%">
         <div class="board-add-icon">
-	    <a href="?controller=task&amp;action=create&amp;project_id=<?= $column['project_id'] ?>&amp;column_id=<?= $column['id'] ?>" title="<?= t('Add a new task') ?>">+</a>
+	    <a href="?controller=task&amp;action=create&amp;project_id=<?= $column['project_id'] ?>&amp;column_id=<?= $column['id'] ?>&amp;release_id=<?= $release['id'] ?>" title="<?= t('Add a new task') ?>">+</a>
         </div>
         <?= Helper\escape($column['title']) ?>
         <?php if ($column['task_limit']): ?>
@@ -24,11 +26,12 @@
     <?php endforeach ?>
 </tr>
 <tr>
-    <?php foreach ($board as $column): ?>
+    <?php foreach ($release['columns'] as $column): ?>
     <td
         id="column-<?= $column['id'] ?>"
         class="column <?= $column['task_limit'] && count($column['tasks']) > $column['task_limit'] ? 'task-limit-warning' : '' ?>"
         data-column-id="<?= $column['id'] ?>"
+		data-release-id="<?= $release['id'] ?>"
         data-task-limit="<?= $column['task_limit'] ?>"
         >
         <?php foreach ($column['tasks'] as $task): ?>
@@ -46,4 +49,5 @@
     </td>
     <?php endforeach ?>
 </tr>
+<?php endforeach ?>
 </table>

@@ -100,6 +100,7 @@ Kanboard.Board = (function() {
                 board_save(
                     ui.item.attr('data-task-id'),
                     ui.item.parent().attr("data-column-id"),
+					ui.item.parent().attr("data-release-id"),
                     ui.item.index() + 1
                 );
             }
@@ -142,19 +143,19 @@ Kanboard.Board = (function() {
     }
 
     // Save and refresh the board
-    function board_save(taskId, columnId, position)
+    function board_save(taskId, columnId, releaseId, position)
     {
         var boardSelector = $("#board");
         var projectId = boardSelector.attr("data-project-id");
 
         board_unload_events();
-
         $.ajax({
             cache: false,
             url: "?controller=board&action=save&project_id=" + projectId,
             data: {
                 "task_id": taskId,
                 "column_id": columnId,
+				"release_id": releaseId,
                 "position": position,
                 "csrf_token": boardSelector.attr("data-csrf-token"),
             },

@@ -27,6 +27,9 @@
         <?= Helper\form_label(t('Category'), 'category_id') ?>
         <?= Helper\form_select('category_id', $categories_list, $values, $errors) ?><br/>
 
+		<?= Helper\form_label(t('Release'), 'release_id') ?>
+		<?= Helper\form_select('release_id', $releases_list, $values, $errors) ?><br/>
+
         <?= Helper\form_label(t('Color'), 'color_id') ?>
         <?= Helper\form_select('color_id', $colors_list, $values, $errors) ?><br/>
 

@@ -5,7 +5,12 @@ namespace Schema;
 use Core\Security;
 use PDO;
 
-const VERSION = 35;
+const VERSION = 36;
+
+function version_36($pdo)
+{
+	$pdo->exec('ALTER TABLE tasks ADD COLUMN release_id INTEGER DEFAULT 0');
+}
 
 function version_35($pdo)
 {

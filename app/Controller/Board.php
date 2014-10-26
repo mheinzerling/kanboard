@@ -384,7 +384,7 @@ class Board extends Base
 
             $values = $this->request->getValues();
 
-            if ($this->task->movePosition($project_id, $values['task_id'], $values['column_id'], $values['position'])) {
+            if ($this->task->movePosition($project_id, $values['task_id'], $values['column_id'],$values['release_id'], $values['position'])) {
 
                 $this->response->html(
                     $this->template->load('board_show', array(

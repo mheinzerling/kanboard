@@ -235,20 +235,27 @@ class Board extends Base
     public function get($project_id, array $filters = array())
     {
         $columns = $this->getColumns($project_id);
+		$releases = $this->getOpenReleases($project_id);
         $tasks = $this->taskFinder->getTasksOnBoard($project_id);
 
-        foreach ($columns as &$column) {
+		$releases[]=array('id'=>0,'name'=>'Unscheduled');
+		$c=array();
+		foreach ($releases as $release)
+		{
+			$c[$release['id']]=array('id'=>$release['id'], 'name'=>$release['name'],'columns'=>array());
 
-            $column['tasks'] = array();
+			foreach ($columns as $column) {
+				$c[$release['id']]['columns'][$column['id']]=$column;
+				$c[$release['id']]['columns'][$column['id']]['tasks'] = array();
 
-            foreach ($tasks as &$task) {
-                if ($task['column_id'] == $column['id']) {
-                    $column['tasks'][] = $task;
-                }
-            }
-        }
-
-        return $columns;
+				foreach ($tasks as &$task) {
+					if ($task['column_id'] == $column['id'] && $task['release_id'] == $release['id']) {
+						$c[$release['id']]['columns'][$column['id']]['tasks'][] = $task;
+					}
+				}
+			}
+		}
+        return $c;
     }
 
     /**
@@ -286,6 +293,11 @@ class Board extends Base
     {
         return $this->db->table(self::TABLE)->eq('project_id', $project_id)->asc('position')->findAll();
     }
+
+	public function getOpenReleases($project_id)
+	{
+		return $this->db->table(Release::TABLE)->eq('project_id', $project_id)->eq('closed',0)->desc('name')->findAll();
+	}
 
     /**
      * Get the number of columns for a given project

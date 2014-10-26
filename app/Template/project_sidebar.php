@@ -22,7 +22,10 @@
             <li>
                 <a href="?controller=category&amp;action=index&amp;project_id=<?= $project['id'] ?>"><?= t('Category management') ?></a>
             </li>
-            <?php if (Helper\is_admin()): ?>
+			<li>
+				<a href="?controller=release&amp;action=index&amp;project_id=<?= $project['id'] ?>"><?= t('Release management') ?></a>
+			</li>
+			<?php if (Helper\is_admin()): ?>
                 <li>
                     <a href="?controller=project&amp;action=users&amp;project_id=<?= $project['id'] ?>"><?= t('User management') ?></a>
                 </li>

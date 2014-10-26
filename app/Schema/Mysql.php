@@ -5,7 +5,23 @@ namespace Schema;
 use PDO;
 use Core\Security;
 
-const VERSION = 34;
+const VERSION = 35;
+
+function version_35($pdo)
+{
+	$pdo->exec("
+        CREATE TABLE project_releases (
+            id INT NOT NULL AUTO_INCREMENT,
+            name VARCHAR(50) NOT NULL,
+            creator_id INT,
+            project_id INT,
+            closed INT NOT NULL,
+            PRIMARY KEY(id),
+            FOREIGN KEY(creator_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE,
+        ) ENGINE=InnoDB CHARSET=utf8
+    ");
+}
 
 function version_34($pdo)
 {
